@@ -6,9 +6,13 @@ import kamui.system.Settings;
 
 public class Screen extends JPanel{
   Main main;
-  public Screen(){
+  Display display;
+  public Screen(Display display){
     super();
+    this.display=display;
     main=new Main(this);
+    addMouseListener(main);
+    addMouseMotionListener(main);
   }
   public void paintComponent(Graphics g){
     super.paintComponent(g);

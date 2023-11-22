@@ -20,7 +20,7 @@ public class Display extends JFrame{
     setSize(Settings.width,Settings.height+insets.top);
     setResizable(false);
 
-    screen=new Screen();
+    screen=new Screen(this);
     screen.setPreferredSize(new Dimension(Settings.width,Settings.height));
     add(screen);
 
@@ -29,5 +29,7 @@ public class Display extends JFrame{
     scrollpane.getVerticalScrollBar().setUnitIncrement(25);
 
     add(scrollpane);
+    
+    addKeyListener(screen.main);
   }
 }
