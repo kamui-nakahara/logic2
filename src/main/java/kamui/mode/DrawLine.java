@@ -1,9 +1,10 @@
-package kamui;
+package kamui.mode;
 
 import java.awt.Graphics;
 import java.awt.Color;
 import java.util.ArrayList;
 import kamui.object.Line;
+import kamui.Main;
 
 public class DrawLine{
   Main main;

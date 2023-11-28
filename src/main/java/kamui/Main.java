@@ -16,49 +16,65 @@ import java.util.HashMap;
 import kamui.gate.*;
 import kamui.object.*;
 import kamui.system.Settings;
+import kamui.file.*;
+import kamui.mode.*;
 
 public class Main implements KeyListener,MouseListener,MouseMotionListener{
-  Screen screen;
-  Menu menu;
+  public Screen screen;
+  public Menu menu;
   ModeSelect modeSelect;
   DrawLine drawLine;
   GateDelete gateDelete;
   GateMove gateMove;
-  int width=Settings.width;
-  int height=Settings.height;
-  Gate gate=new And2(-10,-10);
+  MakeBlock makeBlock;
+  public GateCopy gateCopy;
+  Save save;
+  Open open;
+  Load load;
+  public int width=Settings.width;
+  public int height=Settings.height;
+  public ArrayList<Gate> blocks=new ArrayList<>();
+  public Gate gate=new SevenSegment(-10,-10);
   public Point mousePoint=new Point(-10,-10);
   Rectangle menuButton=new Rectangle(10,10,40,40);
-  boolean wire_flag=false;
-  boolean gate_put=false;
-  boolean gate_move=false;
-  boolean gate_delete=false;
-  boolean gate_config=false;
-  boolean gate_select=false;
-  boolean mode_select=false;
-  boolean debug=false;
+  public boolean wire_flag=false;
+  public boolean gate_put=false;
+  public boolean gate_move=false;
+  public boolean gate_delete=false;
+  public boolean gate_config=false;
+  public boolean gate_select=false;
+  public boolean gate_copy=false;
+  public boolean mode_select=false;
+  public boolean gate_move2=false;
+  public boolean make_block=false;
+  public boolean debug=false;
+  boolean reset=false;
   public boolean mousePressed=false;
   public boolean old_mousePressed=false;
   Color backgroundColor=new Color(200,200,200);
   Color lineColor=new Color(0,0,0,50);
   Color menuButtonColor1=new Color(100,100,100);
   Color menuButtonColor2=new Color(150,150,150);
-  ArrayList<Gate> gates=new ArrayList<>();
+  public ArrayList<Gate> gates=new ArrayList<>();
   ArrayList<Point> collision_flags=new ArrayList<>();
-  ArrayList<Line> lines=new ArrayList<>();
-  ArrayList<Gate> remove;
+  public ArrayList<Line> lines=new ArrayList<>();
+  public ArrayList<Gate> remove;
   public Main(Screen screen){
     this.screen=screen;
     this.menu=new Menu(this);
     this.modeSelect=new ModeSelect(this);
     this.drawLine=new DrawLine(this);
     this.gateDelete=new GateDelete(this);
+    this.gateCopy=new GateCopy(this);
     this.gateMove=new GateMove(this);
+    this.makeBlock=new MakeBlock(this);
+    this.save=new Save(this);
+    this.open=new Open(this);
   }
-  void setSize(int width,int height){
+  public void setSize(int width,int height){
     screen.setPreferredSize(new Dimension(width,height));
   }
-  void putGate(Gate gate){
+  public void putGate(Gate gate){
     gates.add(gate.copy());
     if (width-100<gate.x){
       width+=Settings.width/2;
@@ -68,7 +84,7 @@ public class Main implements KeyListener,MouseListener,MouseMotionListener{
     }
     setSize(width,height);
   }
-  void collision(Gate gate){
+  public void collision(Gate gate){
     for (Gate g:gates){
       for (Point point1:g.getAbsInputs().keySet()){
 	for (Point point2:gate.getAbsOutputs().keySet()){
@@ -98,7 +114,7 @@ public class Main implements KeyListener,MouseListener,MouseMotionListener{
 	collision(gate);
       }
     }
-    if (mousePressed && !old_mousePressed && !wire_flag && !gate_put && !gate_move && !gate_delete && !gate_config && !gate_select && !mode_select){
+    if (mousePressed && !(old_mousePressed || wire_flag || gate_put || gate_move || gate_delete || gate_config || gate_select || mode_select || gate_copy || gate_move2 || make_block)){
       modeSelect.open();
       mode_select=true;
     }
@@ -108,16 +124,21 @@ public class Main implements KeyListener,MouseListener,MouseMotionListener{
 	wire_flag=false;
 	gate_put=false;
 	gate_move=false;
+	gate_move2=false;
 	gate_delete=false;
+	gate_copy=false;
 	gate_config=false;
 	mode_select=false;
+	make_block=false;
       }
     }
     remove=new ArrayList<>();
     menu.update();
     drawLine.update();
     gateDelete.update();
+    gateCopy.update();
     gateMove.update();
+    makeBlock.update();
     for (Gate gate:gates){
       if (gate_config){
 	gate.update(this);
@@ -126,6 +147,20 @@ public class Main implements KeyListener,MouseListener,MouseMotionListener{
     }
     modeSelect.update();
     gates.removeAll(remove);
+    if (reset){
+      for (Gate gate:gates){
+	for (Point p:gate.inputs.keySet()){
+	  gate.inputs.put(p,false);
+	}
+	for (Point p:gate.outputs.keySet()){
+	  gate.outputs.put(p,false);
+	}
+      }
+      for (Line l:lines){
+	l.value=false;
+      }
+      reset=false;
+    }
     old_mousePressed=mousePressed;
     calc();
   }
@@ -235,15 +270,16 @@ public class Main implements KeyListener,MouseListener,MouseMotionListener{
     Graphics2D g2=(Graphics2D)g;
     background(g);
     for (Gate gate:gates){
-      gate.draw(g);
+      gate.draw(g,debug);
     }
     if (gate_put){
       gate.draw(g);
     }
     menu.draw(g);
-    modeSelect.draw(g);
     drawLine.draw(g);
+    gateCopy.draw(g);
     gateDelete.draw(g);
+    makeBlock.draw(g);
     g.setColor(Color.RED);
     for (Point point:collision_flags){
       g.fillOval(point.x-4,point.y-4,8,8);
@@ -258,6 +294,7 @@ public class Main implements KeyListener,MouseListener,MouseMotionListener{
     g.fillRect(15,18,30,4);
     g.fillRect(15,28,30,4);
     g.fillRect(15,38,30,4);
+    modeSelect.draw(g);
   }
   void background(Graphics g){
     Graphics2D g2=(Graphics2D)g;
@@ -278,10 +315,13 @@ public class Main implements KeyListener,MouseListener,MouseMotionListener{
 	wire_flag=false;
 	gate_put=false;
 	gate_move=false;
+	gate_move2=false;
 	gate_delete=false;
+	gate_copy=false;
 	gate_config=false;
 	gate_select=false;
 	mode_select=false;
+	make_block=false;
 	break;
       case KeyEvent.VK_UP:
 	if (0<mousePoint.y-10){
@@ -307,9 +347,12 @@ public class Main implements KeyListener,MouseListener,MouseMotionListener{
 	wire_flag=true;
 	gate_put=false;
 	gate_move=false;
+	gate_move2=false;
 	gate_delete=false;
+	gate_copy=false;
 	gate_config=false;
 	mode_select=false;
+	make_block=false;
 	break;
       case KeyEvent.VK_A:
 	wire_flag=false;
@@ -317,15 +360,21 @@ public class Main implements KeyListener,MouseListener,MouseMotionListener{
 	gate_move=false;
 	gate_delete=false;
 	gate_config=false;
+	gate_move2=false;
 	mode_select=false;
+	gate_copy=false;
+	make_block=false;
 	break;
       case KeyEvent.VK_M:
 	wire_flag=false;
 	gate_put=false;
-	gate_move=true;
+	gate_move2=true;
 	gate_delete=false;
+	gate_copy=false;
+	gate_move=false;
 	gate_config=false;
 	mode_select=false;
+	make_block=false;
 	break;
       case KeyEvent.VK_D:
 	wire_flag=false;
@@ -333,18 +382,63 @@ public class Main implements KeyListener,MouseListener,MouseMotionListener{
 	gate_move=false;
 	gate_delete=true;
 	gate_config=false;
+	gate_move2=false;
+	gate_copy=false;
 	mode_select=false;
+	make_block=false;
 	break;
       case KeyEvent.VK_C:
 	wire_flag=false;
 	gate_put=false;
 	gate_move=false;
+	gate_move2=false;
 	gate_delete=false;
 	gate_config=true;
 	mode_select=false;
+	gate_copy=false;
+	make_block=false;
+	break;
+      case KeyEvent.VK_Y:
+	wire_flag=false;
+	gate_put=false;
+	gate_move=false;
+	gate_move2=false;
+	gate_delete=false;
+	gate_config=false;
+	gate_copy=true;
+	mode_select=false;
+	make_block=false;
+	gateCopy.init();
+	break;
+      case KeyEvent.VK_P:
+	if (gate_move || gate_move2){
+	  wire_flag=false;
+	  gate_put=false;
+	  gate_move=!gate_move;
+	  gate_move2=!gate_move2;
+	  gate_delete=false;
+	  gate_config=false;
+	  gate_copy=false;
+	  mode_select=false;
+	  make_block=false;
+	}
+	break;
+      case KeyEvent.VK_B:
+	wire_flag=false;
+	gate_put=false;
+	gate_move=false;
+	gate_move2=false;
+	gate_delete=false;
+	gate_config=false;
+	gate_copy=false;
+	mode_select=false;
+	make_block=true;
 	break;
       case KeyEvent.VK_SPACE:
 	debug=!debug;
+	break;
+      case KeyEvent.VK_R:
+	reset=true;
 	break;
     }
   }

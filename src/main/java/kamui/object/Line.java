@@ -5,14 +5,15 @@ import java.awt.Graphics2D;
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.BasicStroke;
+import java.util.List;
+import java.io.Serializable;
+import kamui.system.Settings;
 
-public class Line{
-  BasicStroke stroke1=new BasicStroke(3);
-  BasicStroke stroke2=new BasicStroke(1);
-  int x1;
-  int y1;
-  int x2;
-  int y2;
+public class Line implements Serializable{
+  public int x1;
+  public int y1;
+  public int x2;
+  public int y2;
   public int begin=0;
   public boolean value=false;
   public Color color=Color.BLACK;
@@ -21,6 +22,12 @@ public class Line{
     this.y1=y1;
     this.x2=x2;
     this.y2=y2;
+  }
+  public Line copy(){
+    Line line=new Line(x1,y1,x2,y2);
+    line.begin=this.begin;
+    line.value=this.value;
+    return line;
   }
   public Point getCenter(){
     return new Point((x1+x2)/2,(y1+y2)/2);
@@ -48,9 +55,9 @@ public class Line{
     }else{
       g.setColor(color);
     }
-    g2.setStroke(stroke1);
+    g2.setStroke(Settings.stroke1);
     g.drawLine(x1,y1,x2,y2);
-    g2.setStroke(stroke2);
+    g2.setStroke(Settings.stroke2);
     g.fillOval(x1-4,y1-4,8,8);
     g.fillOval(x2-4,y2-4,8,8);
   }

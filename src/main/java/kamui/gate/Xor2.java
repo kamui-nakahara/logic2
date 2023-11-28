@@ -4,11 +4,15 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Color;
 import java.awt.geom.Arc2D;
+import kamui.system.Settings;
 
 public class Xor2 extends Gate{
   public Xor2(int x,int y){
     super(x,y,2,1);
     draw_input_line_flag=false;
+  }
+  public String getName(){
+    return "xor2";
   }
   public Gate copy(){
     Gate gate=new Xor2(x,y);
@@ -22,8 +26,8 @@ public class Xor2 extends Gate{
     boolean c=((a || b) && !(a && b));
     outputs.put(terminal.get(0),c);
   }
-  public void draw(Graphics g){
-    super.draw(g);
+  public void draw(Graphics g,boolean a){
+    super.draw(g,a);
     Graphics2D g2=(Graphics2D)g;
     g.drawLine(x-25,y-20,x-10,y-20);
     g.drawLine(x-25,y+20,x-10,y+20);
@@ -31,6 +35,6 @@ public class Xor2 extends Gate{
     g2.draw(new Arc2D.Double(x-104,y-40,80,80,-30,60,Arc2D.OPEN));
     g2.draw(new Arc2D.Double(x-39,y-20,60,60,90,-70,Arc2D.OPEN));
     g2.draw(new Arc2D.Double(x-39,y-40,60,60,-90,70,Arc2D.OPEN));
-    g2.setStroke(stroke2);
+    g2.setStroke(Settings.stroke2);
   }
 }

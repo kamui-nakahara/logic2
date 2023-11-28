@@ -1,4 +1,4 @@
-package kamui;
+package kamui.mode;
 
 import java.awt.Color;
 import java.awt.Rectangle;
@@ -6,6 +6,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Font;
+import kamui.Main;
 
 public class ModeSelect{
   Main main;
@@ -13,13 +14,15 @@ public class ModeSelect{
   Color selectedTextColor=new Color(255,255,255);
   Color otherColor=new Color(255,255,255);
   Color otherTextColor=new Color(100,100,100);
-  Rectangle[] choices=new Rectangle[5];
+  Rectangle[] choices=new Rectangle[7];
   String[] strings=new String[]{
     "配線",
     "配置",
     "移動",
     "削除",
-    "設定"
+    "設定",
+    "複製",
+    "ブロック化"
   };
   int selected=-1;
   Font font=new Font("",Font.PLAIN,40);
@@ -32,11 +35,13 @@ public class ModeSelect{
     choices[2]=new Rectangle(main.mousePoint.x+10,main.mousePoint.y+100,200,50);
     choices[3]=new Rectangle(main.mousePoint.x+10,main.mousePoint.y+150,200,50);
     choices[4]=new Rectangle(main.mousePoint.x+10,main.mousePoint.y+200,200,50);
+    choices[5]=new Rectangle(main.mousePoint.x+10,main.mousePoint.y+250,200,50);
+    choices[6]=new Rectangle(main.mousePoint.x+10,main.mousePoint.y+300,200,50);
   }
   public void update(){
     if (main.mode_select){
       boolean collision=false;
-      for (int i=0;i<5;i++){
+      for (int i=0;i<7;i++){
 	if (choices[i].contains(main.mousePoint)){
 	  selected=i;
 	  collision=true;
@@ -50,6 +55,8 @@ public class ModeSelect{
 	main.gate_move=false;
 	main.gate_delete=false;
 	main.gate_config=false;
+	main.gate_copy=false;
+	main.make_block=false;
 	switch(selected){
 	  case 0:
 	    main.wire_flag=true;
@@ -66,6 +73,13 @@ public class ModeSelect{
 	  case 4:
 	    main.gate_config=true;
 	    break;
+	  case 5:
+	    main.gate_copy=true;
+	    main.gateCopy.init();
+	    break;
+	  case 6:
+	    main.make_block=true;
+	    break;
 	}
       }
     }
@@ -73,7 +87,7 @@ public class ModeSelect{
   public void draw(Graphics g){
     Graphics2D g2=(Graphics2D)g;
     if (main.mode_select){
-      for (int i=0;i<5;i++){
+      for (int i=0;i<7;i++){
 	if (i==selected){
 	  g.setColor(selectedColor);
 	}else{

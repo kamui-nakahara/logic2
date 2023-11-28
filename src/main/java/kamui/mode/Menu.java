@@ -1,4 +1,4 @@
-package kamui;
+package kamui.mode;
 
 import java.awt.Graphics;
 import java.awt.Color;
@@ -6,11 +6,13 @@ import java.util.ArrayList;
 import kamui.gate.*;
 import kamui.object.*;
 import kamui.system.Settings;
+import kamui.Main;
 
 public class Menu{
   Main main;
-  Color menuColor=new Color(0,0,0,200);
-  ArrayList<Gate> gates=new ArrayList<>();
+  Color menuColor=new Color(128,128,128,200);
+  public ArrayList<Gate> gates=new ArrayList<>();
+  public int last=1000;
   Gate selectedGate;
   boolean selected=false;
   public Menu(Main main){
@@ -30,9 +32,17 @@ public class Menu{
     gates.add(new Xnor3(100,650));
     gates.add(new Input(100,700));
     gates.add(new Output(100,750));
+    gates.add(new SevenSegment(100,850));
   }
   public void update(){
     if (main.gate_select){
+      if (main.width-100<gates.get(gates.size()-1).x){
+	main.width+=Settings.width/2;
+      }
+      if (main.height-100<gates.get(gates.size()-1).y){
+	main.height+=Settings.height/2;
+      }
+      main.setSize(main.width,main.height);
       if (main.mousePressed && !main.old_mousePressed){
 	for (Gate gate:gates){
 	  if (gate.getRect().contains(main.mousePoint)){

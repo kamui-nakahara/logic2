@@ -5,8 +5,8 @@ import java.awt.Graphics;
 import kamui.system.Settings;
 
 public class Screen extends JPanel{
-  Main main;
-  Display display;
+  public Main main;
+  public Display display;
   public Screen(Display display){
     super();
     this.display=display;

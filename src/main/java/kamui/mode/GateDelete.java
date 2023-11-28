@@ -1,4 +1,4 @@
-package kamui;
+package kamui.mode;
 
 import java.awt.Color;
 import java.awt.Rectangle;
@@ -7,6 +7,7 @@ import java.awt.Graphics2D;
 import java.util.ArrayList;
 import kamui.gate.Gate;
 import kamui.object.Line;
+import kamui.Main;
 
 public class GateDelete{
   Main main;

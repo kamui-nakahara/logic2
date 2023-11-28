@@ -4,18 +4,25 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Color;
 import java.awt.Point;
-import java.awt.BasicStroke;
+import java.awt.Font;
 import java.awt.Rectangle;
+import java.awt.FontMetrics;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.io.Serializable;
 import kamui.object.Line;
 import kamui.Main;
+import kamui.system.Settings;
 
-public class Gate{
+public class Gate implements Serializable{
+  static Font font=new Font("",Font.PLAIN,15);
   public int x;//中心座標のx
   public int y;//中心座標のy
   int input_y_max=0;
   int output_y_max=0;
+  public String title="";
   public boolean draw_input_line_flag=true;
   boolean draw_output_line_flag=false;
   public HashMap<Point,Boolean> inputs=new HashMap<>();
@@ -24,10 +31,14 @@ public class Gate{
   HashMap<Point,Point> points=new HashMap<>();
   public HashMap<Point,Point> points_r=new HashMap<>();
   HashMap<Point,Boolean> flag=new HashMap<>();
+  public ArrayList<Gate> block_gates=new ArrayList<>();
+  public ArrayList<Line> block_lines=new ArrayList<>();
+  public HashMap<Point,String> input_title=new HashMap<>();
+  public HashMap<Point,String> output_title=new HashMap<>();
+  ArrayList<Gate> block_inputs;
+  ArrayList<Gate> block_outputs;
   ArrayList<Boolean> value;
   ArrayList<Point> terminal;
-  static BasicStroke stroke1=new BasicStroke(3);
-  public static BasicStroke stroke2=new BasicStroke(1);
   public Color color=Color.BLACK;
   public boolean input=false;
   public boolean output=false;
@@ -35,22 +46,32 @@ public class Gate{
     //int inputsは入力端子の数 int outputsは出力端子の数
     this.x=x;
     this.y=y;
+    int is=inputs;
+    int os=outputs;
     if (inputs%2==1){
-      this.inputs.put(new Point(-40,0),false);
       inputs--;
+    }
+    for (int i=inputs/2-1;i>=0;i--){
+      this.inputs.put(new Point(-40,-i*10-10),false);
+    }
+    if (is%2==1){
+      this.inputs.put(new Point(-40,0),false);
     }
     for (int i=0;i<inputs/2;i++){
       this.inputs.put(new Point(-40,i*10+10),false);
-      this.inputs.put(new Point(-40,-i*10-10),false);
     }
     input_y_max=inputs/2*10+10;
     if (outputs%2==1){
-      this.outputs.put(new Point(40,0),false);
       outputs--;
+    }
+    for (int i=outputs/2-1;i>=0;i--){
+      this.outputs.put(new Point(40,-i*10-10),false);
+    }
+    if (os%2==1){
+      this.outputs.put(new Point(40,0),false);
     }
     for (int i=0;i<outputs/2;i++){
       this.outputs.put(new Point(40,i*10+10),false);
-      this.outputs.put(new Point(40,-i*10-10),false);
     }
     output_y_max=outputs/2*10+10;
   }
@@ -143,12 +164,24 @@ public class Gate{
   }
   public void calc(){
     value=new ArrayList<>();
+    ArrayList<Point> ip=new ArrayList<>();
     terminal=new ArrayList<>();
     for (Point p:inputs.keySet()){
-      value.add(inputs.get(p));
+      ip.add(p);
     }
     for (Point p:outputs.keySet()){
       terminal.add(p);
+    }
+    Point[] i=ip.toArray(new Point[ip.size()]);
+    Arrays.sort(i,new PointComparator());
+    for (int j=0;j<i.length;j++){
+      value.add(inputs.get(i[j]));
+    }
+    Point[] o=terminal.toArray(new Point[terminal.size()]);
+    Arrays.sort(o,new PointComparator());
+    terminal=new ArrayList<>();
+    for (int j=0;j<o.length;j++){
+      terminal.add(o[j]);
     }
   }
   public void update(Main main){
@@ -158,22 +191,54 @@ public class Gate{
     y=point.y;
   }
   public void draw(Graphics g){
-    g.setColor(color);
+    draw(g,false);
+  }
+  public String getName(){
+    return "original";
+  }
+  void drawStringCenter(Graphics g,String text,int x,int y){
+    FontMetrics fm=g.getFontMetrics();
+    Rectangle rectText=fm.getStringBounds(text,g).getBounds();
+    int X=x-rectText.width/2;
+    int Y=y-rectText.height/2+fm.getMaxAscent();
+    g.drawString(text,X,Y);
+  }
+  public void draw(Graphics g,boolean a){
     Graphics2D g2=(Graphics2D)g;
-    g2.setStroke(stroke1);
+    g.setColor(color);
+    g.setFont(font);
+    drawStringCenter(g,title,x,y);
+    g2.setStroke(Settings.stroke1);
     for (Point point:inputs.keySet()){
+      if (inputs.get(point) && a){
+	g.setColor(Color.RED);
+      }else{
+	g.setColor(color);
+      }
       g.drawLine(x+point.x,y+point.y,x+point.x+20,y+point.y);
       g.fillOval(x+point.x-4,y+point.y-4,8,8);
     }
     for (Point point:outputs.keySet()){
+      if (outputs.get(point) && a){
+	g.setColor(Color.RED);
+      }else{
+	g.setColor(color);
+      }
       g.drawLine(x+point.x,y+point.y,x+point.x-20,y+point.y);
       g.fillOval(x+point.x-4,y+point.y-4,8,8);
     }
+    g.setColor(color);
     if (draw_input_line_flag){
       g.drawLine(x-20,y+input_y_max,x-20,y-input_y_max);
     }
     if (draw_output_line_flag){
       g.drawLine(x+20,y+output_y_max,x+20,y-output_y_max);
     }
+  }
+}
+class PointComparator implements Comparator<Point>{
+  @Override
+  public int compare(Point p1,Point p2){
+    return p1.y-p2.y;
   }
 }
