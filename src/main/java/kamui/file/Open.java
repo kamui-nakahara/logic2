@@ -51,10 +51,11 @@ public class Open{
       Convert con=(Convert)in.readObject();
       main.gates=con.gates;
       main.lines=con.lines;
-      main.blocks=con.blocks;
       main.width=con.width;
       main.height=con.height;
       main.setSize(main.width,main.height);
+      main.gate_add=true;
+      main.con_blocks=con.blocks;
     }catch(IOException e){
       e.printStackTrace();
     }catch(ClassNotFoundException e){

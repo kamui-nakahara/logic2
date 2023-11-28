@@ -49,14 +49,8 @@ public class Load{
 	ObjectInputStream in=new ObjectInputStream(b)){
 
       Convert con=(Convert)in.readObject();
-      main.blocks.addAll(con.blocks);
-      for (Gate block:con.blocks){
-	main.blocks.add(block.copy());
-	Gate bl=block.copy();
-	bl.setPoint(new Point(100,main.menu.last));
-	main.menu.gates.add(bl);
-	main.menu.last+=50;
-      }
+      main.gate_add=true;
+      main.con_blocks=con.blocks;
     }catch(IOException e){
       e.printStackTrace();
     }catch(ClassNotFoundException e){

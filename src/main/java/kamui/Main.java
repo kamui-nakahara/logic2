@@ -18,6 +18,7 @@ import kamui.object.*;
 import kamui.system.Settings;
 import kamui.file.*;
 import kamui.mode.*;
+import kamui.file.Convert;
 
 public class Main implements KeyListener,MouseListener,MouseMotionListener{
   public Screen screen;
@@ -27,6 +28,8 @@ public class Main implements KeyListener,MouseListener,MouseMotionListener{
   GateDelete gateDelete;
   GateMove gateMove;
   MakeBlock makeBlock;
+  public ArrayList<Gate> con_blocks;
+  public boolean gate_add=false;
   public GateCopy gateCopy;
   Save save;
   Open open;
@@ -70,6 +73,7 @@ public class Main implements KeyListener,MouseListener,MouseMotionListener{
     this.makeBlock=new MakeBlock(this);
     this.save=new Save(this);
     this.open=new Open(this);
+    this.load=new Load(this);
   }
   public void setSize(int width,int height){
     screen.setPreferredSize(new Dimension(width,height));
@@ -105,6 +109,16 @@ public class Main implements KeyListener,MouseListener,MouseMotionListener{
     }
   }
   void update(){
+    if (gate_add){
+      for (Gate block:con_blocks){
+	blocks.add(block.copy());
+	Gate bl=block.copy();
+	bl.setPoint(new Point(100,menu.last));
+	menu.gates.add(bl);
+	menu.last+=50;
+      }
+      gate_add=false;
+    }
     collision_flags=new ArrayList<>();
     gate.setPoint(mousePoint);
     if (gate_put){
