@@ -12,7 +12,7 @@ public class Menu{
   Main main;
   Color menuColor=new Color(128,128,128,200);
   public ArrayList<Gate> gates=new ArrayList<>();
-  public int last=1000;
+  public int last=1100;
   Gate selectedGate;
   boolean selected=false;
   public Menu(Main main){
@@ -33,6 +33,8 @@ public class Menu{
     gates.add(new Input(100,700));
     gates.add(new Output(100,750));
     gates.add(new SevenSegment(100,850));
+    gates.add(new KeyBoard(100,1000));
+    gates.add(new LED(100,1050));
   }
   public void update(){
     if (main.gate_select){

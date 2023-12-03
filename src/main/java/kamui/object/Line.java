@@ -8,6 +8,8 @@ import java.awt.BasicStroke;
 import java.util.List;
 import java.io.Serializable;
 import kamui.system.Settings;
+import kamui.Main;
+import kamui.gate.Gate;
 
 public class Line implements Serializable{
   public int x1;
@@ -58,7 +60,53 @@ public class Line implements Serializable{
     g2.setStroke(Settings.stroke1);
     g.drawLine(x1,y1,x2,y2);
     g2.setStroke(Settings.stroke2);
-    g.fillOval(x1-4,y1-4,8,8);
-    g.fillOval(x2-4,y2-4,8,8);
+    int terminals=0;
+    for (Gate gate:Main.gates){
+      for (Point p:gate.getAbsInputs().keySet()){
+	if (p.equals(getPoint1())){
+	  terminals++;
+	}
+      }
+      for (Point p:gate.getAbsOutputs().keySet()){
+	if (p.equals(getPoint1())){
+	  terminals++;
+	}
+      }
+    }
+    for (Line line:Main.lines){
+      if (line.getPoint1().equals(getPoint1())){
+	terminals++;
+      }
+      if (line.getPoint1().equals(getPoint2())){
+	terminals++;
+      }
+    }
+    if (Main.wire_flag || Main.gate_put || Main.gate_delete || Main.gate_copy || Main.gate_move2 || Main.make_block || terminals>2){
+      g.fillOval(x1-4,y1-4,8,8);
+    }
+    terminals=0;
+    for (Gate gate:Main.gates){
+      for (Point p:gate.getAbsInputs().keySet()){
+	if (p.equals(getPoint2())){
+	  terminals++;
+	}
+      }
+      for (Point p:gate.getAbsOutputs().keySet()){
+	if (p.equals(getPoint2())){
+	  terminals++;
+	}
+      }
+    }
+    for (Line line:Main.lines){
+      if (line.getPoint1().equals(getPoint2())){
+	terminals++;
+      }
+      if (line.getPoint2().equals(getPoint2())){
+	terminals++;
+      }
+    }
+    if (Main.wire_flag || Main.gate_put || Main.gate_delete || Main.gate_copy || Main.gate_move2 || Main.make_block || terminals>2){
+      g.fillOval(x2-4,y2-4,8,8);
+    }
   }
 }

@@ -34,23 +34,24 @@ public class Main implements KeyListener,MouseListener,MouseMotionListener{
   Save save;
   Open open;
   Load load;
+  public HashMap<Integer,Boolean> keys=new HashMap<>();
   public int width=Settings.width;
   public int height=Settings.height;
   public ArrayList<Gate> blocks=new ArrayList<>();
-  public Gate gate=new SevenSegment(-10,-10);
+  public Gate gate=new And2(-10,-10);
   public Point mousePoint=new Point(-10,-10);
   Rectangle menuButton=new Rectangle(10,10,40,40);
-  public boolean wire_flag=false;
-  public boolean gate_put=false;
-  public boolean gate_move=false;
-  public boolean gate_delete=false;
-  public boolean gate_config=false;
-  public boolean gate_select=false;
-  public boolean gate_copy=false;
-  public boolean mode_select=false;
-  public boolean gate_move2=false;
-  public boolean make_block=false;
-  public boolean debug=false;
+  public static boolean wire_flag=false;
+  public static boolean gate_put=false;
+  public static boolean gate_move=false;
+  public static boolean gate_delete=false;
+  public static boolean gate_config=false;
+  public static boolean gate_select=false;
+  public static boolean gate_copy=false;
+  public static boolean mode_select=false;
+  public static boolean gate_move2=false;
+  public static boolean make_block=false;
+  public static boolean debug=false;
   boolean reset=false;
   public boolean mousePressed=false;
   public boolean old_mousePressed=false;
@@ -58,9 +59,9 @@ public class Main implements KeyListener,MouseListener,MouseMotionListener{
   Color lineColor=new Color(0,0,0,50);
   Color menuButtonColor1=new Color(100,100,100);
   Color menuButtonColor2=new Color(150,150,150);
-  public ArrayList<Gate> gates=new ArrayList<>();
+  public static ArrayList<Gate> gates=new ArrayList<>();
   ArrayList<Point> collision_flags=new ArrayList<>();
-  public ArrayList<Line> lines=new ArrayList<>();
+  public static ArrayList<Line> lines=new ArrayList<>();
   public ArrayList<Gate> remove;
   public Main(Screen screen){
     this.screen=screen;
@@ -322,7 +323,9 @@ public class Main implements KeyListener,MouseListener,MouseMotionListener{
       g.drawLine(0,y,width,y);
     }
   }
-  public void keyPressed(KeyEvent e){}
+  public void keyPressed(KeyEvent e){
+    keys.put(e.getKeyCode(),true);
+  }
   public void keyReleased(KeyEvent e){
     switch (e.getKeyCode()){
       case KeyEvent.VK_ESCAPE:
@@ -455,6 +458,7 @@ public class Main implements KeyListener,MouseListener,MouseMotionListener{
 	reset=true;
 	break;
     }
+    keys.put(e.getKeyCode(),false);
   }
   public void keyTyped(KeyEvent e){}
   public void mousePressed(MouseEvent e){

@@ -17,14 +17,14 @@ import kamui.Main;
 import kamui.system.Settings;
 
 public class Gate implements Serializable{
-  static Font font=new Font("",Font.PLAIN,15);
+  static Font font=new Font("",Font.PLAIN,12);
   public int x;//中心座標のx
   public int y;//中心座標のy
   int input_y_max=0;
   int output_y_max=0;
   public String title="";
   public boolean draw_input_line_flag=true;
-  boolean draw_output_line_flag=false;
+  public boolean draw_output_line_flag=false;
   public HashMap<Point,Boolean> inputs=new HashMap<>();
   public HashMap<Point,Boolean> outputs=new HashMap<>();
   HashMap<Point,ArrayList<Line>> lines=new HashMap<>();
@@ -42,6 +42,7 @@ public class Gate implements Serializable{
   public Color color=Color.BLACK;
   public boolean input=false;
   public boolean output=false;
+  public ArrayList<Integer> data=new ArrayList<>();
   public Gate(int x,int y,int inputs,int outputs){
     //int inputsは入力端子の数 int outputsは出力端子の数
     this.x=x;
@@ -197,6 +198,7 @@ public class Gate implements Serializable{
     return "original";
   }
   void drawStringCenter(Graphics g,String text,int x,int y){
+    g.setFont(font);
     FontMetrics fm=g.getFontMetrics();
     Rectangle rectText=fm.getStringBounds(text,g).getBounds();
     int X=x-rectText.width/2;
@@ -206,7 +208,6 @@ public class Gate implements Serializable{
   public void draw(Graphics g,boolean a){
     Graphics2D g2=(Graphics2D)g;
     g.setColor(color);
-    g.setFont(font);
     drawStringCenter(g,title,x,y);
     g2.setStroke(Settings.stroke1);
     for (Point point:inputs.keySet()){
@@ -216,7 +217,25 @@ public class Gate implements Serializable{
 	g.setColor(color);
       }
       g.drawLine(x+point.x,y+point.y,x+point.x+20,y+point.y);
-      g.fillOval(x+point.x-4,y+point.y-4,8,8);
+      int terminals=0;
+      for (Gate gate:Main.gates){
+	for (Point p:gate.getAbsOutputs().keySet()){
+	  if (p.equals(new Point(point.x+x,point.y+y))){
+	    terminals++;
+	  }
+	}
+      }
+      for (Line line:Main.lines){
+	if (line.getPoint1().equals(new Point(point.x+x,point.y+y))){
+	  terminals++;
+	}
+	if (line.getPoint2().equals(new Point(point.x+x,point.y+y))){
+	  terminals++;
+	}
+      }
+      if (Main.wire_flag || Main.gate_put || Main.gate_delete || Main.gate_copy || Main.gate_move2 || Main.make_block || terminals>2){
+	g.fillOval(x+point.x-4,y+point.y-4,8,8);
+      }
     }
     for (Point point:outputs.keySet()){
       if (outputs.get(point) && a){
@@ -225,7 +244,25 @@ public class Gate implements Serializable{
 	g.setColor(color);
       }
       g.drawLine(x+point.x,y+point.y,x+point.x-20,y+point.y);
-      g.fillOval(x+point.x-4,y+point.y-4,8,8);
+      int terminals=0;
+      for (Gate gate:Main.gates){
+	for (Point p:gate.getAbsInputs().keySet()){
+	  if (p.equals(new Point(point.x+x,point.y+y))){
+	    terminals++;
+	  }
+	}
+      }
+      for (Line line:Main.lines){
+	if (line.getPoint1().equals(new Point(point.x+x,point.y+y))){
+	  terminals++;
+	}
+	if (line.getPoint2().equals(new Point(point.x+x,point.y+y))){
+	  terminals++;
+	}
+      }
+      if (Main.wire_flag || Main.gate_put || Main.gate_delete || Main.gate_copy || Main.gate_move2 || Main.make_block || terminals>2){
+	g.fillOval(x+point.x-4,y+point.y-4,8,8);
+      }
     }
     g.setColor(color);
     if (draw_input_line_flag){

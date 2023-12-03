@@ -1,3 +1,4 @@
+kamui/object/LED.class
 kamui/mode/ModeSelect.class
 kamui/gate/Xnor2.class
 kamui/Display$3.class
@@ -9,10 +10,12 @@ kamui/mode/MakeBlock.class
 kamui/gate/And2.class
 kamui/dialog/title/Title.class
 kamui/gate/Block.class
+kamui/object/KeyBoard.class
 kamui/file/Convert.class
 kamui/dialog/title/Title$1.class
 kamui/gate/Nor2.class
 kamui/file/Load.class
+kamui/dialog/keyset/SetKey$1.class
 kamui/file/Save.class
 kamui/system/Settings.class
 kamui/Screen.class
@@ -33,6 +36,7 @@ kamui/gate/Xnor3.class
 kamui/file/Open.class
 kamui/Main.class
 kamui/mode/GateMove.class
+kamui/dialog/keyset/SetKey.class
 kamui/gate/And3.class
 kamui/gate/Or3.class
 kamui/gate/Nand2.class

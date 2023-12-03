@@ -6,34 +6,14 @@ import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.awt.Point;
-import java.util.HashMap;
-import java.util.ArrayList;
 import kamui.gate.*;
 import kamui.object.*;
 import kamui.Main;
 
 public class Open{
   Main main;
-  HashMap<String,Gate> conv=new HashMap<>();
   public Open(Main main){
     this.main=main;
-    conv.put("and2",new And2(-10,-10));
-    conv.put("and3",new And3(-10,-10));
-    conv.put("or2",new Or2(-10,-10));
-    conv.put("or3",new Or3(-10,-10));
-    conv.put("nand2",new Nand2(-10,-10));
-    conv.put("nand3",new Nand3(-10,-10));
-    conv.put("nor2",new Nor2(-10,-10));
-    conv.put("nor3",new Nor3(-10,-10));
-    conv.put("xor2",new Xor2(-10,-10));
-    conv.put("xor3",new Xor3(-10,-10));
-    conv.put("xnor2",new Xnor2(-10,-10));
-    conv.put("xnor3",new Xnor3(-10,-10));
-    conv.put("not",new Not(-10,-10));
-    conv.put("input",new Input(-10,-10));
-    conv.put("output",new Output(-10,-10));
-    conv.put("sevensegment",new SevenSegment(-10,-10));
   }
   public void open(){
     JFileChooser filechooser=new JFileChooser();
