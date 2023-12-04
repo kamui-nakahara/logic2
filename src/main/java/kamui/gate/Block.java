@@ -1,6 +1,7 @@
 package kamui.gate;
 
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.Graphics2D;
 import java.awt.Color;
 import java.awt.Point;
@@ -9,6 +10,7 @@ import java.util.HashMap;
 import kamui.object.Line;
 import kamui.gate.Gate;
 import kamui.system.Settings;
+import kamui.Main;
 
 public class Block extends Gate{
   public Block(int x,int y,ArrayList<Gate> inputs,ArrayList<Gate> outputs,ArrayList<Gate> gates,ArrayList<Line> lines){
@@ -18,6 +20,7 @@ public class Block extends Gate{
     this.block_lines=lines;
     this.block_inputs=inputs;
     this.block_outputs=outputs;
+    this.data.add(0);
   }
   public String getName(){
     return "block";
@@ -65,6 +68,9 @@ public class Block extends Gate{
       l.add(line.copy());
     }
     Gate gate=new Block(x,y,i,o,g,l);
+    if (gate.data.size()==0){
+      gate.data.add(0);
+    }
     gate.title=title;
     gate.inputs=new HashMap<>();
     gate.outputs=new HashMap<>();
@@ -189,11 +195,53 @@ public class Block extends Gate{
       outputs.put(terminal.get(i),block_outputs.get(i).inputs.get(new Point(-40,0)));
     }
   }
+  public void update(Main main){
+    for (Gate gate:block_gates){
+      if (gate.getName().equals("block")){
+	gate.update(main);
+      }
+    }
+    if (getRect().contains(main.mousePoint)){
+      data.set(0,1);
+    }else{
+      data.set(0,0);
+    }
+  }
   public void draw(Graphics g,boolean a){
     super.draw(g,a);
     Graphics2D g2=(Graphics2D)g;
     g.setColor(color);
     g.drawRect(x-20,y-20,40,40);
     g2.setStroke(Settings.stroke2);
+    if (data.get(0)==1){
+      int x1=block_gates.get(0).x;
+      int y1=block_gates.get(0).y;
+      int x2=block_gates.get(0).x;
+      int y2=block_gates.get(0).y;
+      for (Gate gate:block_gates){
+	if (x1>gate.x){
+	  x1=gate.x;
+	}
+	if (y1>gate.y){
+	  y1=gate.y;
+	}
+	if (x2<gate.x){
+	  x2=gate.x;
+	}
+	if (y2<gate.y){
+	  y2=gate.y;
+	}
+      }
+      Rectangle rect=new Rectangle(x1,y1,x2-x1,y2-y1);
+      g.setColor(Color.GRAY);
+      g.fillRect(x-rect.width/2-100,y-rect.height/2-100,rect.width+200,rect.height+200);
+      g.setColor(Color.BLACK);
+      g.drawRect(x-rect.width/2-100,y-rect.height/2-100,rect.width+200,rect.height+200);
+      for (Gate gate:block_gates){
+	Gate ga=gate.copy();
+	ga.setPoint(new Point(ga.x-x1+x-rect.width/2,ga.y-y1+y-rect.height/2));
+	ga.draw(g,a);
+      }
+    }
   }
 }
