@@ -9,10 +9,13 @@ import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.ComponentListener;
+import java.awt.event.ComponentEvent;
+import java.awt.Dimension;
 import java.util.ArrayList;
 import kamui.system.Settings;
 
-public class Display extends JFrame{
+public class Display extends JFrame implements ComponentListener{
   public Screen screen;
   int width;
   int height;
@@ -24,7 +27,7 @@ public class Display extends JFrame{
     height=Settings.height+insets.top;
     setDefaultCloseOperation(EXIT_ON_CLOSE);
     setSize(Settings.width,Settings.height+insets.top);
-    setResizable(false);
+    setResizable(true);
 
     screen=new Screen(this);
 
@@ -79,5 +82,23 @@ public class Display extends JFrame{
     add(scrollpane);
     
     addKeyListener(screen.main);
+    addComponentListener(this);
+  }
+  public void componentHidden(ComponentEvent e) {
+  }
+  public void componentMoved(ComponentEvent e) {
+  }
+  public void componentResized(ComponentEvent e) {
+    Dimension d=getSize();
+    Settings.width=d.width;
+    Settings.height=d.height;
+    if (Settings.width>screen.main.width){
+      screen.main.width=d.width;
+    }
+    if (Settings.height>screen.main.height){
+      screen.main.height=d.height;
+    }
+  }
+  public void componentShown(ComponentEvent e) {
   }
 }
