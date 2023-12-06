@@ -284,6 +284,7 @@ public class Main implements KeyListener,MouseListener,MouseMotionListener{
   void draw(Graphics g){
     Graphics2D g2=(Graphics2D)g;
     background(g);
+    drawLine.draw(g);
     for (Gate gate:gates){
       gate.draw(g,debug);
     }
@@ -291,7 +292,6 @@ public class Main implements KeyListener,MouseListener,MouseMotionListener{
       gate.draw(g);
     }
     menu.draw(g);
-    drawLine.draw(g);
     gateCopy.draw(g);
     gateDelete.draw(g);
     makeBlock.draw(g);

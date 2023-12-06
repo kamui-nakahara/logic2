@@ -233,7 +233,7 @@ public class Block extends Gate{
 	}
       }
       Rectangle rect=new Rectangle(x1,y1,x2-x1,y2-y1);
-      g.setColor(Color.GRAY);
+      g.setColor(new Color(128,128,128,200));
       g.fillRect(x-rect.width/2-100,y-rect.height/2-100,rect.width+200,rect.height+200);
       g.setColor(Color.BLACK);
       g.drawRect(x-rect.width/2-100,y-rect.height/2-100,rect.width+200,rect.height+200);
@@ -241,6 +241,10 @@ public class Block extends Gate{
 	Gate ga=gate.copy();
 	ga.setPoint(new Point(ga.x-x1+x-rect.width/2,ga.y-y1+y-rect.height/2));
 	ga.draw(g,a);
+      }
+      for (Line line:block_lines){
+	Line l=new Line(line.x1-x1+x-rect.width/2,line.y1-y1+y-rect.height/2,line.x2-x1+x-rect.width/2,line.y2-y1+y-rect.height/2);
+	l.draw(g,a);
       }
     }
   }
