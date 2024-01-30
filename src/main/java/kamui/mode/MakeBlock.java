@@ -44,7 +44,7 @@ public class MakeBlock{
 	  if (gate.getRect().intersects(rect)){
 	    gate.color=Color.BLUE;
 	  }else{
-	    gate.color=Color.BLACK;
+	    gate.color=gate.originalcolor;
 	  }
 	}
 	for (Line line:main.lines){

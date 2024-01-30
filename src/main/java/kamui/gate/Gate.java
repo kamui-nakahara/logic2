@@ -40,6 +40,7 @@ public class Gate implements Serializable{
   ArrayList<Boolean> value;
   ArrayList<Point> terminal;
   public Color color=Color.BLACK;
+  public Color originalcolor=Color.BLACK;
   public boolean input=false;
   public boolean output=false;
   public ArrayList<Integer> data=new ArrayList<>();
@@ -199,6 +200,9 @@ public class Gate implements Serializable{
   }
   void drawStringCenter(Graphics g,String text,int x,int y){
     g.setFont(font);
+    drawstring(g,text,x,y);
+  }
+  public void drawstring(Graphics g,String text,int x,int y){
     FontMetrics fm=g.getFontMetrics();
     Rectangle rectText=fm.getStringBounds(text,g).getBounds();
     int X=x-rectText.width/2;

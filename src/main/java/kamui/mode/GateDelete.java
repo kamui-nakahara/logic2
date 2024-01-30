@@ -25,7 +25,7 @@ public class GateDelete{
 	if (r.contains(main.mousePoint) || (delete && r.intersects(rect))){
 	  g.color=Color.BLUE;
 	}else{
-	  g.color=Color.BLACK;
+	  g.color=g.originalcolor;
 	}
       }
       for (Line line:main.lines){

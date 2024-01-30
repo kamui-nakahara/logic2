@@ -44,7 +44,7 @@ public class GateMove{
 	      selected=true;
 	    }
 	  }else{
-	    g.color=Color.BLACK;
+	    g.color=g.originalcolor;
 	  }
 	}
       }

@@ -1,5 +1,7 @@
 package kamui;
 
+import javax.imageio.ImageIO;
+import javax.swing.JFileChooser;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.Graphics;
@@ -11,14 +13,18 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.awt.RenderingHints;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.io.File;
 import kamui.gate.*;
 import kamui.object.*;
 import kamui.system.Settings;
 import kamui.file.*;
 import kamui.mode.*;
 import kamui.file.Convert;
+import kamui.dialog.title.Title2;
 
 public class Main implements KeyListener,MouseListener,MouseMotionListener{
   public Screen screen;
@@ -41,6 +47,7 @@ public class Main implements KeyListener,MouseListener,MouseMotionListener{
   public Gate gate=new And2(-10,-10);
   public Point mousePoint=new Point(-10,-10);
   Rectangle menuButton=new Rectangle(10,10,40,40);
+  public boolean show_grid=true;
   public static boolean wire_flag=false;
   public static boolean gate_put=false;
   public static boolean gate_move=false;
@@ -75,6 +82,27 @@ public class Main implements KeyListener,MouseListener,MouseMotionListener{
     this.save=new Save(this);
     this.open=new Open(this);
     this.load=new Load(this);
+  }
+  public void screenshot(){
+    JFileChooser filechooser=new JFileChooser();
+    int select=filechooser.showSaveDialog(screen.display);
+    if (select==JFileChooser.APPROVE_OPTION){
+      File file=filechooser.getSelectedFile();
+      BufferedImage bi=new BufferedImage(width,height,BufferedImage.TYPE_INT_BGR);
+      Graphics2D off=bi.createGraphics();
+      off.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
+      off.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+      draw(off);
+      try{
+	String filename=file.getPath();
+	if (!filename.contains(".jpg")){
+	  filename+=".jpg";
+	}
+	boolean result=ImageIO.write(bi,"jpg",new File(filename));
+      }catch (Exception e){
+	e.printStackTrace();
+      }
+    }
   }
   public void setSize(int width,int height){
     screen.setPreferredSize(new Dimension(width,height));
@@ -114,9 +142,9 @@ public class Main implements KeyListener,MouseListener,MouseMotionListener{
       for (Gate block:con_blocks){
 	blocks.add(block.copy());
 	Gate bl=block.copy();
-	bl.setPoint(new Point(100,menu.last));
+	bl.setPoint(new Point(menu.last,120));
 	menu.gates.add(bl);
-	menu.last+=50;
+	menu.last+=100;
       }
       gate_add=false;
     }
@@ -283,7 +311,11 @@ public class Main implements KeyListener,MouseListener,MouseMotionListener{
   }
   void draw(Graphics g){
     Graphics2D g2=(Graphics2D)g;
-    background(g);
+    if (show_grid) background(g);
+    else{
+      g.setColor(Color.WHITE);
+      g.fillRect(0,0,width,height);
+    }
     drawLine.draw(g);
     for (Gate gate:gates){
       gate.draw(g,debug);
@@ -450,6 +482,20 @@ public class Main implements KeyListener,MouseListener,MouseMotionListener{
 	gate_copy=false;
 	mode_select=false;
 	make_block=true;
+	break;
+      case KeyEvent.VK_L:
+	gate=new Label(-10,-10);
+	gate.setPoint(new Point(mousePoint.x,mousePoint.y));
+	Title2 title=new Title2(screen.display,gate);
+	wire_flag=false;
+	gate_put=true;
+	gate_move=false;
+	gate_delete=false;
+	gate_config=false;
+	gate_move2=false;
+	mode_select=false;
+	gate_copy=false;
+	make_block=false;
 	break;
       case KeyEvent.VK_SPACE:
 	debug=!debug;

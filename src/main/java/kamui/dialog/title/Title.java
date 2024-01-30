@@ -40,9 +40,9 @@ public class Title extends JDialog{
 	main.make_block=false;
 	main.gate=block;
 	Gate b=block.copy();
-	b.setPoint(new Point(100,main.menu.last));
+	b.setPoint(new Point(main.menu.last,120));
 	main.menu.gates.add(b);
-	main.menu.last+=50;
+	main.menu.last+=100;
 	main.blocks.add(block.copy());
 	dispose();
       }

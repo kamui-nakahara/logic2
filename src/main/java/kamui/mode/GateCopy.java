@@ -84,7 +84,7 @@ public class GateCopy{
 	    if (r.contains(main.mousePoint) || (pressed && r.intersects(rect))){
 	      g.color=Color.BLUE;
 	    }else{
-	      g.color=Color.BLACK;
+	      g.color=g.originalcolor;
 	    }
 	  }
 	}
@@ -127,7 +127,7 @@ public class GateCopy{
 	      gate.inputs=g.inputs;
 	      gate.outputs=g.outputs;
 	      gates.add(gate);
-	      g.color=Color.BLACK;
+	      g.color=g.originalcolor;
 	    }
 	  }
 	  ArrayList<Line> remove=new ArrayList<>();

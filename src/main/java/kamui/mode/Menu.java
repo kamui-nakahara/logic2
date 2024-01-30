@@ -12,29 +12,31 @@ public class Menu{
   Main main;
   Color menuColor=new Color(128,128,128,200);
   public ArrayList<Gate> gates=new ArrayList<>();
-  public int last=1100;
+  public int last=850;
   Gate selectedGate;
   boolean selected=false;
   public Menu(Main main){
     this.main=main;
-    gates.add(new And2(100,50));
-    gates.add(new And3(100,100));
-    gates.add(new Or2(100,150));
-    gates.add(new Or3(100,200));
-    gates.add(new Not(100,250));
-    gates.add(new Nand2(100,300));
-    gates.add(new Nand3(100,350));
-    gates.add(new Nor2(100,400));
-    gates.add(new Nor3(100,450));
-    gates.add(new Xor2(100,500));
-    gates.add(new Xor3(100,550));
-    gates.add(new Xnor2(100,600));
-    gates.add(new Xnor3(100,650));
-    gates.add(new Input(100,700));
-    gates.add(new Output(100,750));
-    gates.add(new SevenSegment(100,850));
-    gates.add(new KeyBoard(100,1000));
-    gates.add(new LED(100,1050));
+    gates.add(new And2(150,50));
+    gates.add(new And3(250,50));
+    gates.add(new Or2(350,50));
+    gates.add(new Or3(450,50));
+    gates.add(new Not(550,50));
+    gates.add(new Nand2(650,50));
+    gates.add(new Nand3(750,50));
+    gates.add(new Nor2(850,50));
+    gates.add(new Nor3(950,50));
+    gates.add(new Xor2(1050,50));
+    gates.add(new Xor3(1150,50));
+    gates.add(new Xnor2(1250,50));
+    gates.add(new Xnor3(50,120));
+    gates.add(new Input(150,120));
+    gates.add(new Output(250,120));
+    gates.add(new SevenSegment(350,120));
+    gates.add(new KeyBoard(450,120));
+    gates.add(new LED(550,120));
+    gates.add(new Terminal1(650,120));
+    gates.add(new Terminal2(750,120));
   }
   public void update(){
     if (main.gate_select){
@@ -68,7 +70,7 @@ public class Menu{
   public void draw(Graphics g){
     if (main.gate_select){
       g.setColor(menuColor);
-      g.fillRect(0,0,200,main.height);
+      g.fillRect(0,0,Settings.width,250);
       for (Gate gate:gates){
 	gate.draw(g);
       }

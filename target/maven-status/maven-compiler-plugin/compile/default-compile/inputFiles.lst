@@ -6,11 +6,13 @@
 /Users/kamui-nakahara/programs/logic2/src/main/java/kamui/file/Save.java
 /Users/kamui-nakahara/programs/logic2/src/main/java/kamui/gate/And3.java
 /Users/kamui-nakahara/programs/logic2/src/main/java/kamui/Main.java
+/Users/kamui-nakahara/programs/logic2/src/main/java/kamui/object/LED.java
 /Users/kamui-nakahara/programs/logic2/src/main/java/kamui/mode/DrawLine.java
 /Users/kamui-nakahara/programs/logic2/src/main/java/kamui/mode/GateCopy.java
 /Users/kamui-nakahara/programs/logic2/src/main/java/kamui/mode/Menu.java
 /Users/kamui-nakahara/programs/logic2/src/main/java/kamui/system/Settings.java
 /Users/kamui-nakahara/programs/logic2/src/main/java/kamui/mode/ModeSelect.java
+/Users/kamui-nakahara/programs/logic2/src/main/java/kamui/object/Terminal1.java
 /Users/kamui-nakahara/programs/logic2/src/main/java/kamui/gate/Nor3.java
 /Users/kamui-nakahara/programs/logic2/src/main/java/kamui/Screen.java
 /Users/kamui-nakahara/programs/logic2/src/main/java/kamui/Display.java
@@ -20,9 +22,12 @@
 /Users/kamui-nakahara/programs/logic2/src/main/java/kamui/App.java
 /Users/kamui-nakahara/programs/logic2/src/main/java/kamui/gate/Gate.java
 /Users/kamui-nakahara/programs/logic2/src/main/java/kamui/file/Load.java
+/Users/kamui-nakahara/programs/logic2/src/main/java/kamui/object/Label.java
 /Users/kamui-nakahara/programs/logic2/src/main/java/kamui/gate/Nor2.java
 /Users/kamui-nakahara/programs/logic2/src/main/java/kamui/mode/GateMove.java
 /Users/kamui-nakahara/programs/logic2/src/main/java/kamui/gate/And2.java
+/Users/kamui-nakahara/programs/logic2/src/main/java/kamui/dialog/title/Title2.java
+/Users/kamui-nakahara/programs/logic2/src/main/java/kamui/object/Terminal2.java
 /Users/kamui-nakahara/programs/logic2/src/main/java/kamui/gate/Xor3.java
 /Users/kamui-nakahara/programs/logic2/src/main/java/kamui/gate/Not.java
 /Users/kamui-nakahara/programs/logic2/src/main/java/kamui/file/Open.java
@@ -30,6 +35,7 @@
 /Users/kamui-nakahara/programs/logic2/src/main/java/kamui/gate/SevenSegment.java
 /Users/kamui-nakahara/programs/logic2/src/main/java/kamui/gate/Xnor3.java
 /Users/kamui-nakahara/programs/logic2/src/main/java/kamui/object/Input.java
+/Users/kamui-nakahara/programs/logic2/src/main/java/kamui/dialog/keyset/SetKey.java
 /Users/kamui-nakahara/programs/logic2/src/main/java/kamui/object/KeyBoard.java
 /Users/kamui-nakahara/programs/logic2/src/main/java/kamui/gate/Block.java
 /Users/kamui-nakahara/programs/logic2/src/main/java/kamui/mode/MakeBlock.java

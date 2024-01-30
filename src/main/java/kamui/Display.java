@@ -5,6 +5,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JCheckBoxMenuItem;
 import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.event.ActionListener;
@@ -62,14 +63,34 @@ public class Display extends JFrame implements ComponentListener{
       }
     });
     menu1.add(item1_3);
-    JMenuItem item1_4=new JMenuItem("終了");
+    JMenuItem item1_4=new JMenuItem("画像に保存");
     item1_4.addActionListener(new ActionListener(){
+      public void actionPerformed(ActionEvent e){
+	screen.main.screenshot();
+      }
+    });
+    menu1.add(item1_4);
+    JMenuItem item1_6=new JMenuItem("終了");
+    item1_6.addActionListener(new ActionListener(){
       public void actionPerformed(ActionEvent e){
 	System.exit(0);
       }
     });
-    menu1.add(item1_4);
+    menu1.add(item1_6);
     menubar.add(menu1);
+    JMenu menu2=new JMenu("表示");
+    JCheckBoxMenuItem item2_1=new JCheckBoxMenuItem("グリッドの表示"){
+      {
+	setSelected(true);
+      }
+    };
+    item2_1.addActionListener(new ActionListener(){
+      public void actionPerformed(ActionEvent e){
+	screen.main.show_grid=item2_1.isSelected();
+      }
+    });
+    menu2.add(item2_1);
+    menubar.add(menu2);
     setJMenuBar(menubar);
 
     screen.setPreferredSize(new Dimension(Settings.width,Settings.height));
